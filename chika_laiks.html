@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Čika Laiks Checker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #333333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8);
+            transition: transform 0.3s ease;
+            width: 500px;
+            height: 500px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-15px);
+        }
+
+        .card img {
+            width: 100%;
+            height: 54%;
+            object-fit: cover;
+            border-radius: 50% 50% 0 0;
+        }
+
+        .card-content {
+            padding: 1rem;
+            height: 55%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            color: #333;
+            margin: 0.5rem 0;
+        }
+
+        .card-text {
+            color: #666;
+            text-align: center;
+            padding: 0 2rem;
+            font-size: 1rem;
+            margin: 0.5rem 0;
+            line-height: 1.4;
+        }
+
+        .card-button {
+            background-color: #d1401b;
+            color: #ffffff;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-button:hover {
+            background-color: #fa3015;
+        }
+
+        .donate-button {
+            background-color: #0070ba;
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+
+        .donate-button:hover {
+            background-color: #005ea6;
+        }
+
+        @media (max-width: 520px) {
+            .card {
+                width: 90vw;
+                height: 90vw;
+            }
+
+            .card-title {
+                font-size: 1.4rem;
+            }
+
+            .card-text {
+                font-size: 0.9rem;
+                padding: 0 1rem;
+            }
+
+            .card-button {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+            }
+
+            .donate-button {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <img src="https://ideogram.ai/assets/image/lossless/response/zEj_C_nVSxmaZEi4-3YAHQ" alt="Čika Laiks">
+        <div class="card-content">
+            <h2 class="card-title">Vai ir čika laiks?</h2>
+            <p class="card-text">Neveicas? Neiet? Varbūt varat to visu novelt uz čika laiku. Pārbaudiet, vai pašlaik ir čika laiks.</p>
+            <button class="card-button" id="checkButton">Pārbaudīt un novelt vainu</button>
+            <p></p>
+        </div>
+    </div>
+
+    <script>
+        const dateRanges = [
+            // January dates
+            { month: 0, day: 26, start: '11:40', end: '15:42' },
+            { month: 0, day: 28, start: '17:49', end: '21:31' },
+            { month: 0, day: 30, start: '13:29', end: '24:00' },
+            { month: 0, day: 31, start: '00:00', end: '00:52' },
+
+            // February dates
+            { month: 1, day: 2, start: '00:06', end: '03:10' },
+            { month: 1, day: 3, start: '12:20', end: '24:00' },
+            { month: 1, day: 4, start: '00:00', end: '05:33' },
+            { month: 1, day: 6, start: '05:30', end: '08:44' },
+            { month: 1, day: 8, start: '09:52', end: '13:04' },
+            { month: 1, day: 10, start: '15:49', end: '19:00' },
+            { month: 1, day: 12, start: '21:12', end: '24:00' },
+            { month: 1, day: 13, start: '00:00', end: '03:07' },
+            { month: 1, day: 15, start: '10:35', end: '13:45' },
+            { month: 1, day: 18, start: '01:24', end: '02:19' },
+            { month: 1, day: 20, start: '12:06', end: '14:54' },
+            { month: 1, day: 22, start: '22:39', end: '24:00' },
+            { month: 1, day: 23, start: '00:00', end: '01:08' },
+            { month: 1, day: 25, start: '05:28', end: '07:40' },
+            { month: 1, day: 27, start: '00:05', end: '10:46' }
+        ];
+
+        function getNextChikaLaiks(now) {
+            for (const range of dateRanges) {
+                const startDate = new Date(now.getFullYear(), range.month, range.day, ...range.start.split(':').map(Number));
+                const endDate = new Date(now.getFullYear(), range.month, range.day, ...range.end.split(':').map(Number));
+
+                if (range.end === '24:00') {
+                    endDate.setDate(endDate.getDate() + 1);
+                }
+
+                if (now < startDate) {
+                    return `Nākamais Čika Laiks: ${startDate.toLocaleString()}`;
+                }
+            }
+            return "Nav vairs Čika Laiks šajā periodā.";
+        }
+
+        document.getElementById('checkButton').addEventListener('click', function() {
+            const now = new Date();
+            const currentTime = now.getTime();
+
+            let isChikaLaiks = false;
+
+            dateRanges.forEach(range => {
+                const startDate = new Date(now.getFullYear(), range.month, range.day, ...range.start.split(':').map(Number));
+                const endDate = new Date(now.getFullYear(), range.month, range.day, ...range.end.split(':').map(Number));
+
+                if (range.end === '24:00') {
+                    endDate.setDate(endDate.getDate() + 1);
+                }
+
+                if (now >= startDate && now <= endDate) {
+                    isChikaLaiks = true;
+                }
+            });
+
+            const nextChika = getNextChikaLaiks(now);
+
+            if (isChikaLaiks) {
+                alert(`Čika laiks!\n${nextChika}`);
+            } else {
+                alert(`Nav čika laiks\n${nextChika}`);
+            }
+        });
+    </script>
+</body>
+</html>
