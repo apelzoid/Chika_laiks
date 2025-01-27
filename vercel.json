@@ -1,0 +1,5 @@
+{
+    "rewrites": [
+      { "source": "/", "destination": "/chika_laiks.html" }
+    ]
+  }
